@@ -23,7 +23,7 @@ export class UsersService {
       include: { all: true },
     });
   }
-  async getUserIDByTgChatID(tgChatID: string) {
+  async getUserIDByTgChatID(tgChatID: number) {
     return await this.usersRepository.findOne({
       where: { tgChatID },
       attributes: ['id'],
@@ -34,6 +34,12 @@ export class UsersService {
     return await this.usersRepository.update(
       { tgChatID },
       { where: { id: user.id } },
+    );
+  }
+  async removeUserChatID(tgChatID: number) {
+    return await this.usersRepository.update(
+      { tgChatID: null },
+      { where: { tgChatID } },
     );
   }
 }

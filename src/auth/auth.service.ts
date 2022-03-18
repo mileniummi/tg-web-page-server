@@ -35,7 +35,7 @@ export class AuthService {
       ...dto,
       password: hashedPassword,
     });
-    return await this.generateToken(newUser);
+    return { tgToken: user.tgUUID, ...(await this.generateToken(newUser)) };
   }
 
   private async generateToken(user: User) {

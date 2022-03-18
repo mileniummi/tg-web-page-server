@@ -9,7 +9,6 @@ export class PostsService {
   constructor(@InjectModel(Post_) private postsRepository: typeof Post_) {}
 
   async createPost(dto: CreatePostDto, user: User) {
-    console.log(user);
     const post = dto;
     post['userID'] = user.id;
     return await this.postsRepository.create(post);
@@ -20,5 +19,8 @@ export class PostsService {
       where: { userID: user.id },
       include: { all: true },
     });
+  }
+  async deletePostByID(postID: number) {
+    return await this.postsRepository.destroy({ where: { id: postID } });
   }
 }

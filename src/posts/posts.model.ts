@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 interface PostCreationAttributes {
   userID: number;
   description: string;
+  photoLink: string;
 }
 
 @Table({ tableName: 'posts' })
@@ -33,5 +34,10 @@ export class Post_ extends Model<Post_, PostCreationAttributes> {
   })
   description: string;
 
-  // photoLink: string;
+  @ApiProperty({ example: 'image.jpg', description: 'Ссылка на фото поста' })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  photoLink: string;
 }
