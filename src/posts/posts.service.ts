@@ -14,7 +14,6 @@ export class PostsService {
     return await this.postsRepository.create(post);
   }
   async getAllPosts(user: User) {
-    console.log(user);
     return await this.postsRepository.findAll({
       where: { userID: user.id },
       include: { all: true },
