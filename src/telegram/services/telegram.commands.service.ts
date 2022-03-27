@@ -21,11 +21,18 @@ export class TelegramCommandsService {
         await this.userService.addUserTgChatID(user, tgChatID);
         return 'Привет, добавляй свои посты в чат этого бота чтобы они появились на странице www.website.com';
       } else {
-        return 'Что то пошло не так... Попробуй перейти по ссылке для бота в личном кабинете еще раз';
+        return 'Что то пошло не так... Тебе нужно зарегистрироватся на сайте';
+      }
+    } else {
+      const user = await this.userService.getUserIDByTgChatID(tgChatID);
+      if (user !== null) {
+        return 'Привет, добавляй свои посты в чат этого бота чтобы они появились на странице www.website.com';
+      } else {
+        return 'Что то пошло не так... Тебе нужно зарегистрироватся на сайте';
       }
     }
-    return 'Эта команда предназначена для начала работы с ботом';
   }
+
   async handlePosts(tgChatID) {
     const user = await this.userService.getUserIDByTgChatID(tgChatID);
     const posts = await this.postsService.getAllPosts(user);
@@ -41,6 +48,7 @@ export class TelegramCommandsService {
     }
     return `Список всех твоих постов:\n${postDescription}`;
   }
+
   async handleDelete(tgChatID) {
     const user = await this.userService.getUserIDByTgChatID(tgChatID);
     const posts = await this.postsService.getAllPosts(user);

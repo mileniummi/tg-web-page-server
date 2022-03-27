@@ -23,7 +23,7 @@ export class JwtAuthGuard implements CanActivate {
         throw new UnauthorizedException();
       }
       const user = this.jwtService.verify(token);
-      const fieldList = ['id', 'username', 'tgUUID'];
+      const fieldList = ['id', 'username'];
       request.user = fieldList.reduce((obj, prop) => {
         return (obj[prop] = user[prop]), obj;
       }, {});
