@@ -113,7 +113,7 @@ export class TelegramService {
       photosArr.slice(-1)[0].file_id,
     );
     fs.mkdir(
-      `./images/${message.chat.id}/photos`,
+      `./public/images/posts/${message.chat.id}/photos`,
       { recursive: true },
       (err) => {
         if (err) {
@@ -121,7 +121,7 @@ export class TelegramService {
         }
       },
     );
-    const photoLink = `./images/${tgChatID}/${photo.file_path}`;
+    const photoLink = `./public/images/posts/${tgChatID}/${photo.file_path}`;
     // download file
     await this.downloadFile(
       `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`,
