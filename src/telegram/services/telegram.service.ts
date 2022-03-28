@@ -121,7 +121,7 @@ export class TelegramService {
         }
       },
     );
-    const photoLink = `./images/posts/${tgChatID}/${photo.file_path}`;
+    const photoLink = `./public/images/posts/${tgChatID}/${photo.file_path}`;
     // download file
     await this.downloadFile(
       `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`,
@@ -130,7 +130,7 @@ export class TelegramService {
     const user = await this.userService.getUserIDByTgChatID(tgChatID);
     // создание самого поста
     const post = await this.postsService.createPost(
-      { description, photoLink },
+      { description, photoLink: photoLink.slice(9) },
       user,
     );
     return this.botInstance.sendMessage(
