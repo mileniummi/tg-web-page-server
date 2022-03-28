@@ -121,7 +121,7 @@ export class TelegramService {
         }
       },
     );
-    const photoLink = `./public/images/posts/${tgChatID}/${photo.file_path}`;
+    const photoLink = `./images/posts/${tgChatID}/${photo.file_path}`;
     // download file
     await this.downloadFile(
       `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`,
