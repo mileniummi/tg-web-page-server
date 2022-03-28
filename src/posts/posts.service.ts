@@ -27,7 +27,7 @@ export class PostsService {
     const user = await this.userService.getUserIDByTgChatID(id);
     return await this.postsRepository.findAll({
       where: { userID: user.id },
-      attributes: ['description', 'photoLink'],
+      attributes: ['description', 'photoLink', 'userID'],
     });
   }
 

@@ -3,13 +3,14 @@ import { HttpService } from '@nestjs/axios';
 import * as TelegramBot from 'node-telegram-bot-api';
 import { UsersService } from '../../users/users.service';
 import { PostsService } from '../../posts/posts.service';
-import * as fs from 'fs';
 import { TelegramCommandsService } from './telegram.commands.service';
 import { TelegramButtonObserver } from './telegram.button-observer';
+import * as EasyYandexS3 from 'easy-yandex-s3';
 
 @Injectable()
 export class TelegramService {
   private readonly botInstance: TelegramBot;
+  private readonly yandexStorage;
 
   constructor(
     private userService: UsersService,
@@ -25,6 +26,14 @@ export class TelegramService {
       { command: '/posts', description: 'Получение всех постов' },
       { command: '/delete', description: 'Удалить пост' },
     ]);
+    this.yandexStorage = new EasyYandexS3({
+      auth: {
+        accessKeyId: process.env.YANDEX_STORAGE_KEY_ID,
+        secretAccessKey: process.env.YANDEX_STORAGE_KEY,
+      },
+      Bucket: process.env.YANDEX_STORAGE_BUCKET_NAME, // например, "my-storage",
+      debug: false, // Дебаг в консоли, потом можете удалить в релизе
+    });
     this.initUserMessageObserver();
     this.initButtonObserver();
   }
@@ -107,30 +116,30 @@ export class TelegramService {
   }
 
   private async createPost(message, tgChatID) {
+    //collecting data
     const description = message.caption === undefined ? '' : message.caption;
     const photosArr = message.photo;
     const photo = await this.botInstance.getFile(
       photosArr.slice(-1)[0].file_id,
     );
-    fs.mkdir(
-      `./public/images/posts/${message.chat.id}/photos`,
-      { recursive: true },
-      (err) => {
-        if (err) {
-          console.log(err);
-        }
-      },
+    const response = await this.httpService.axiosRef({
+      url: `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`,
+      method: 'GET',
+      responseType: 'arraybuffer',
+    });
+    //upload photo to Yandex Cloud
+    const upload = await this.yandexStorage.Upload(
+      { buffer: response.data },
+      `/${tgChatID}/`,
     );
-    const photoLink = `./public/images/posts/${tgChatID}/${photo.file_path}`;
-    // download file
-    await this.downloadFile(
-      `https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${photo.file_path}`,
-      photoLink,
-    );
+    if (upload === false) {
+      console.log('Something went wrong when uploading photo to Yandex Cloud');
+      return;
+    }
     const user = await this.userService.getUserIDByTgChatID(tgChatID);
     // создание самого поста
     const post = await this.postsService.createPost(
-      { description, photoLink: photoLink.slice(9) },
+      { description, photoLink: upload.Location },
       user,
     );
     return this.botInstance.sendMessage(
@@ -142,22 +151,5 @@ export class TelegramService {
   private async checkUserAuthorization(tgChatID) {
     const user = await this.userService.getUserIDByTgChatID(tgChatID);
     return user !== null;
-  }
-
-  private async downloadFile(dataUrl, filename) {
-    const writer = fs.createWriteStream(filename);
-
-    const response = await this.httpService.axiosRef({
-      url: dataUrl,
-      method: 'GET',
-      responseType: 'stream',
-    });
-
-    response.data.pipe(writer);
-
-    return new Promise((resolve, reject) => {
-      writer.on('finish', resolve);
-      writer.on('error', reject);
-    });
   }
 }
