@@ -41,6 +41,7 @@ export class AuthService {
   }
 
   async loginTelegram(dto: CreateTelegramUserDto) {
+    console.log(dto);
     const secret = createHash('sha256')
       .update(process.env.TELEGRAM_BOT_TOKEN)
       .digest();

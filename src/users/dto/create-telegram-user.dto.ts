@@ -1,14 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTelegramUserDto {
-  // {
-  //   "id": 713404198,
-  //   "first_name": "Михаил",
-  //   "last_name": "Кокош",
-  //   "username": "mileniummi",
-  //   "auth_date": 1648419832,
-  //   "hash": "d35bc98f2ba54d970ca72beb68081868e3b440bbb916a3f34a6b6ffa7520f3ac"
-  // }
   @ApiProperty({ example: '1234', description: 'id в телеграме' })
   readonly id: number;
 
