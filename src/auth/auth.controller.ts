@@ -3,7 +3,6 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { ReturnTokenDto } from './dto/return-token.dto';
-import { CreateTelegramUserDto } from '../users/dto/create-telegram-user.dto';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -36,7 +35,7 @@ export class AuthController {
     description: 'Вероятно ваши данные не из телеграмма',
   })
   @Post('/login/telegram')
-  loginTelegram(@Body() dto: CreateTelegramUserDto) {
+  loginTelegram(@Body() dto) {
     return this.authService.loginTelegram(dto);
   }
 }

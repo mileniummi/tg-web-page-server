@@ -9,7 +9,6 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User } from '../users/users.model';
-import { CreateTelegramUserDto } from '../users/dto/create-telegram-user.dto';
 import { createHash, createHmac } from 'crypto';
 
 @Injectable()
@@ -22,7 +21,6 @@ export class AuthService {
     const user = await this.validateUser(dto);
     return { tgToken: user.tgUUID, ...(await this.generateToken(user)) };
   }
-
   async registration(dto: CreateUserDto) {
     const user = await this.usersService.getUsersByUsername(dto.username);
     if (user) {
@@ -40,7 +38,7 @@ export class AuthService {
     return { tgToken: newUser.tgUUID, ...(await this.generateToken(newUser)) };
   }
 
-  async loginTelegram(dto: CreateTelegramUserDto) {
+  async loginTelegram(dto) {
     console.log(dto);
     const secret = createHash('sha256')
       .update(process.env.TELEGRAM_BOT_TOKEN)
