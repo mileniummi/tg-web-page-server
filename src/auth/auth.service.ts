@@ -70,6 +70,7 @@ export class AuthService {
       lastName: dto.last_name,
       password: dto.hash,
       tgChatID: dto.id,
+      photoUrl: dto.photo_url,
     };
     const newUser = await this.usersService.createUser(userProps);
     return await this.generateToken(newUser);

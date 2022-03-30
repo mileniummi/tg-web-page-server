@@ -49,4 +49,11 @@ export class User extends Model<User, UserCreationAttributes> {
   })
   @Column({ type: DataType.INTEGER, unique: true, allowNull: true })
   tgChatID: number;
+
+  @ApiProperty({
+    example: '/user123/photos.png',
+    description: 'ссылка на фото пользователя',
+  })
+  @Column({ type: DataType.STRING, allowNull: true })
+  photoUrl: string;
 }
