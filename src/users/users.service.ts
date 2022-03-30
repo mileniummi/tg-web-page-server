@@ -14,7 +14,13 @@ export class UsersService {
   async getUserInfo(id: number) {
     const user = await this.usersRepository.findOne({
       where: { id },
-      attributes: ['firstName', 'lastName', 'photoUrl', 'createdAt'],
+      attributes: [
+        'username',
+        'firstName',
+        'lastName',
+        'photoUrl',
+        'createdAt',
+      ],
     });
     return user ? user : {};
   }
