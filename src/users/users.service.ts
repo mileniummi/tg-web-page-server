@@ -11,6 +11,14 @@ export class UsersService {
     return await this.usersRepository.create(dto);
   }
 
+  async getUserInfo(id: number) {
+    const user = await this.usersRepository.findOne({
+      where: { id },
+      attributes: ['firstName', 'lastName', 'photoUrl', 'createdAt'],
+    });
+    return user ? user : {};
+  }
+
   async getUsersByUsername(username: string) {
     return await this.usersRepository.findOne({
       where: { username },
