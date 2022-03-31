@@ -65,9 +65,9 @@ export class AuthService {
       return await this.generateToken(user);
     }
     const userProps = {
-      username: dto.username,
-      firstName: dto.first_name,
-      lastName: dto.last_name,
+      username: dto.username ? dto.username : null,
+      firstName: dto.first_name ? dto.first_name : null,
+      lastName: dto.last_name ? dto.last_name : null,
       password: dto.hash,
       tgChatID: dto.id,
       photoUrl: dto.photo_url ? dto.photo_url : null,

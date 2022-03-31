@@ -19,15 +19,18 @@ export class User extends Model<User, UserCreationAttributes> {
   id: number;
 
   @ApiProperty({ example: 'username', description: 'Логин пользователя' })
-  @Column({ type: DataType.STRING, unique: true, allowNull: false })
+  @Column({ type: DataType.STRING, allowNull: true })
   username: string;
 
-  @ApiProperty({ example: 'Jane', description: 'Имя пользователя' })
-  @Column({ type: DataType.STRING })
+  @ApiProperty({
+    example: 'Jane',
+    description: 'Имя пользователя',
+  })
+  @Column({ type: DataType.STRING, allowNull: true })
   firstName: string;
 
   @ApiProperty({ example: 'Doe', description: 'Фамилия пользователя' })
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, allowNull: true })
   lastName: string;
 
   @ApiProperty({ example: 's123', description: 'Пароль пользователя' })
